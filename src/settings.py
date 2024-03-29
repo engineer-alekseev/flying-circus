@@ -19,7 +19,7 @@ class Settings(BaseSettings):
             f"{self.db_host}:{self.db_port}/{self.db_name}"
         )
 
-    model_config = SettingsConfigDict(env_file=".settings")
+    model_config = SettingsConfigDict(env_file="src/.settings")
 
 
 settings = Settings()
