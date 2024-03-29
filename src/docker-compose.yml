@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:16
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - 5050:5050
+    depends_on:
+      - db
+
+
+  auth_grpc_service:
+    build: ./auth_grpc_service
+    container_name: auth_grpc_service
+    working_dir: /app
+    volumes:
+      - ./auth_grpc_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    ports:
+      - 50051:50051
+
+  auth_rest_gateway_service:
+    build: ./auth_rest_gateway_service
+    container_name: auth_rest_gateway_service
+    working_dir: /app
+    volumes:
+      - ./auth_rest_gateway_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    ports:
+      - 8000:8000
