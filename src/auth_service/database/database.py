@@ -1,22 +1,21 @@
-from database.Models.User import User
-from sqlmodel import SQLModel, create_engine, Session
-from sqlalchemy_utils import database_exists, create_database
+import os
+from sqlmodel import SQLModel, select
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 from config import DB_URL
 
-print("DB_URL:", DB_URL)
-
-engine = create_engine(DB_URL, echo=True)
-
-def init_db():
-    global engine
-    if not database_exists(engine.url):
-        create_database(engine.url)
-    print("Initialize database models")
-    SQLModel.metadata.create_all(engine)
-    print("Finish Initializing database models")
+engine = create_async_engine(DB_URL, echo=True, future=True)
 
 
-def get_session():
-    with Session(engine) as session:
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
+
+
+async def get_session():
+    async_session = sessionmaker(
+        engine, class_=AsyncSession, expire_on_commit=False
+    )
+    async with async_session() as session:
         yield session
-

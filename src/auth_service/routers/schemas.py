@@ -4,8 +4,9 @@ from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
 class RegistrationRequest(BaseModel):
-    telegram_id : str
+    telegram_id: str
     email: EmailStr = Field(pattern=".*@student\.21-school\.ru$")
+
     class Config:
         json_schema_extra = {
             "example": {

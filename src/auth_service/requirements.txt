@@ -11,3 +11,5 @@ sqlalchemy
 sqlalchemy-utils
 passlib
 pyjwt
+asyncpg
+alembic

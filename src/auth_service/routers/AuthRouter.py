@@ -6,9 +6,8 @@ from fastapi.responses import JSONResponse
 from routers.schemas import (
     RegistrationRequest,
 )
-from database.Models.User import User
-from database.database import get_session
-from sqlmodel import Session, select
+from database.Models.Models import User
+from database.database import get_session, AsyncSession, select
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -16,12 +15,10 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", status_code=201)
 async def register(
-    request: RegistrationRequest, session: Session = Depends(get_session)
+    request: RegistrationRequest, session: AsyncSession = Depends(get_session)
 ):
-
-    user = session.exec(
-        select(User).where(User.telegram_id == request.telegram_id)
-    ).first()
+    q = select(User).where(User.telegram_id == request.telegram_id)
+    user = (await session.exec(q)).first()
 
     if user:
         raise HTTPException(
@@ -32,13 +29,14 @@ async def register(
     user = User(**request.__dict__)
 
     session.add(user)
-    session.commit()
-    session.refresh(user)
+    await session.commit()
+    await session.refresh(user)
 
 
 @router.get("/{telegram_id}", response_model=User)
-async def get_user(telegram_id: str, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.telegram_id == telegram_id)).first()
+async def get_user(telegram_id: str, session: AsyncSession = Depends(get_session)):
+    q = select(User).where(User.telegram_id == telegram_id)
+    user = (await session.exec(q)).first()
 
     if not user:
         raise HTTPException(

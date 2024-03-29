@@ -1,34 +1,27 @@
-from typing import Annotated
-from pydantic import BaseModel, Field
-from datetime import datetime
-from enum import Enum
+from typing import Optional
+from uuid import UUID
+from pydantic import BaseModel
+from datetime import datetime, timedelta
 
+class RoomInfoCreate(BaseModel):
+    name: str
+    location: str
+    capacity: int
+    min_time: int
+    max_time: int
+    photo_link: Optional[str]
 
-class User(BaseModel):
-    pass
+class RoomInfo(RoomInfoCreate):
+    id: UUID
 
+class BookingCreate(BaseModel):
+    start_time: datetime
+    end_time: datetime
+    room_id: UUID
 
-class RoomInfo(BaseModel):
-    pass
-    # name: str
-    # capacity: int
-    # location: str
-    # min_time: int
-    # max_time: int
-    # photo_link: str
-
-
-class BookingTime(BaseModel):
-    pass
-    # start_time: datetime
-    # end_time: datetime
-
-class BookingInfo(BaseModel):
-    pass
-#     start_time: datetime
-#     end_time: datetime
-#     user_id: int
-#     room_id: int
+class BookingInfo(BookingCreate):
+    id: UUID
+    user_id: UUID
 
 # class Booking(BaseModel):
 #     start_time: datetime

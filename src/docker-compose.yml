@@ -33,18 +33,18 @@ services:
       - db
 
 
-  # auth_service:
-  #   build: ./auth_service
-  #   container_name: auth_service
-  #   working_dir: /app
-  #   volumes:
-  #     - ./auth_service:/app
-  #   command: bash -c "make"
-  #   environment:
-  #     DB_USER: "postgres"
-  #     DB_PASSWORD: "postgres"
-  #   ports:
-  #     - 8000:8000
+  auth_service:
+    build: ./auth_service
+    container_name: auth_service
+    working_dir: /app
+    volumes:
+      - ./auth_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    ports:
+      - 8000:8000
 
 
   booking_service:
@@ -59,3 +59,5 @@ services:
       DB_PASSWORD: "postgres"
     ports:
       - 8001:8000
+    depends_on:
+      - auth_service

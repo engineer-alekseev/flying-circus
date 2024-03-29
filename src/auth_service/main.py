@@ -4,9 +4,10 @@ from database.database import init_db
 from contextlib import asynccontextmanager
 from routers.AuthRouter import router as auth_router
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    await init_db()
     yield
 
 app = FastAPI(
