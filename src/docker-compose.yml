@@ -23,12 +23,12 @@ services:
     depends_on:
       - db
 
-  auth_rest_gateway_service:
-    build: ./auth_rest_gateway_service
-    container_name: auth_rest_gateway_service
+  auth_service:
+    build: ./auth_service
+    container_name: auth_service
     working_dir: /app
     volumes:
-      - ./auth_rest_gateway_service:/app
+      - ./auth_service:/app
     command: bash -c "make"
     environment:
       DB_USER: "postgres"

@@ -20,11 +20,10 @@ fastapi:
 	docker-compose restart fastapi_2
 	docker-compose restart fastapi_3
 
-copy_proto:
-	cp proto/auth.proto auth_grpc_service/proto/auth.proto
-	cp proto/auth.proto auth_rest_gateway_service/proto/auth.proto
-	cp proto/auth.proto gateway_service/proto/auth.proto
-	cp proto/auth.proto booking_service/proto/auth.proto
+# copy_proto:
+# 	cp proto/auth.proto auth_service/proto/auth.proto
+# 	cp proto/auth.proto gateway_service/proto/auth.proto
+# 	cp proto/auth.proto booking_service/proto/auth.proto
 
 test:
 	cd auth; make test
