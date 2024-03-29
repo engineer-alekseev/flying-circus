@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Cookie
-
 from typing import List, Annotated
 
 router = APIRouter(
