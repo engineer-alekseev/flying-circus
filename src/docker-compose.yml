@@ -8,30 +8,54 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - ./postgres:/docker-entrypoint-initdb.d
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
-      PGADMIN_LISTEN_PORT: 5050
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: adminpassword
+  #     PGADMIN_LISTEN_PORT: 5050
+  #   ports:
+  #     - 5050:5050
+  #   depends_on:
+  #     - db
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
     ports:
-      - 5050:5050
+      - 8080:8080
     depends_on:
       - db
 
-  auth_service:
-    build: ./auth_service
-    container_name: auth_service
+
+  # auth_service:
+  #   build: ./auth_service
+  #   container_name: auth_service
+  #   working_dir: /app
+  #   volumes:
+  #     - ./auth_service:/app
+  #   command: bash -c "make"
+  #   environment:
+  #     DB_USER: "postgres"
+  #     DB_PASSWORD: "postgres"
+  #   ports:
+  #     - 8000:8000
+
+
+  booking_service:
+    build: ./booking_service
+    container_name: booking_service
     working_dir: /app
     volumes:
-      - ./auth_service:/app
+      - ./booking_service:/app
     command: bash -c "make"
     environment:
       DB_USER: "postgres"
       DB_PASSWORD: "postgres"
     ports:
-      - 8000:8000
+      - 8001:8000

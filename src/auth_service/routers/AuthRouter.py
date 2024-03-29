@@ -36,7 +36,7 @@ async def register(
     session.refresh(user)
 
 
-@router.get("/{telegram_id}")
+@router.get("/{telegram_id}", response_model=User)
 async def get_user(telegram_id: str, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.telegram_id == telegram_id)).first()
 

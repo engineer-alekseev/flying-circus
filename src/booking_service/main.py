@@ -2,22 +2,26 @@ from fastapi import FastAPI
 
 from database.database import init_db
 from contextlib import asynccontextmanager
-from routers.AuthRouter import router as auth_router
+from routers.BookingRouter import router as booking_router
+from routers.RoomRouter import router as room_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     yield
 
+
 app = FastAPI(
     lifespan=lifespan,
-    title="Auth REST Gateway",
-    description="Gateway to authentication and authorization",
+    title="Booking REST API",
+    description="Service to manage room booking",
     version="1.0.0",
-    root_path="/auth_service",
+    root_path="/booking_service",
 )
 
-app.include_router(auth_router)
+app.include_router(booking_router)
+app.include_router(room_router)
 
 if __name__ == "__main__":
     import uvicorn
