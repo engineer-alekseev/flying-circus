@@ -5,3 +5,4 @@ target=/docker-entrypoint-initdb.d -e POSTGRES_PASSWORD=postgres postgres
 
 
 scp -r -p 2022 ./ prod@bytecode.su:
+# test
