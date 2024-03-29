@@ -7,6 +7,7 @@ pytest
 pydantic-extra-types
 pydantic[email]
 phonenumbers
-opyoid
-grpcio 
-grpcio-tools
+sqlalchemy
+sqlalchemy-utils
+passlib
+pyjwt

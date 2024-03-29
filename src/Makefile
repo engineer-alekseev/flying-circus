@@ -3,7 +3,7 @@ AUTH_SERVER_DIR := fastapi
 DB_DIR := postgres
 DB_CONTAINER_NAME := db
 
-all: clean_db copy_proto
+all: clean_db 
 	docker-compose up
 
 clean_db:
@@ -24,6 +24,7 @@ copy_proto:
 	cp proto/auth.proto auth_grpc_service/proto/auth.proto
 	cp proto/auth.proto auth_rest_gateway_service/proto/auth.proto
 	cp proto/auth.proto gateway_service/proto/auth.proto
+	cp proto/auth.proto booking_service/proto/auth.proto
 
 test:
 	cd auth; make test
