@@ -67,3 +67,22 @@ services:
       TZ: "Asia/Novosibirsk"
     ports:
       - 8002:8000
+
+  notifier_service:
+    build: ./notifier_service
+    container_name: notifier_service
+    working_dir: /app
+    volumes:
+      - ./notifier_service:/app
+    command: bash -c "make"
+    ports:
+      - 8003:8000
+
+  redis_service:
+    image: redis:6
+    container_name: redis_service
+    command: redis-server --appendonly yes
+    volumes:
+      - ./redis_service:/data
+    ports:
+      - 6379:6379
