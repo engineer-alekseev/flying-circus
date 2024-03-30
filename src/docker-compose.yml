@@ -55,3 +55,15 @@ services:
       TZ: "Asia/Novosibirsk"
     ports:
       - 8001:8000
+
+  telegram_service:
+    build: ./telegram_service
+    container_name: telegram_service
+    working_dir: /app
+    volumes:
+      - ./telegram_service:/app
+    command: bash -c "make"
+    environment:
+      TZ: "Asia/Novosibirsk"
+    ports:
+      - 8002:8000
