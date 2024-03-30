@@ -62,7 +62,7 @@ async def get_room_list(
 
 
 @router.get("/{id}/booked", response_model=List[BookingInfo])
-async def get_room_list(
+async def get_room_booking_list(
     id: UUID,
     booking_date: date | None = None,
     user: UserInfo = Depends(get_user),
@@ -93,7 +93,7 @@ async def get_room_list(
 
 
 @router.get("/{id}/booked_every_15_min", response_model=List[int])
-async def get_room_list(
+async def get_room_booking_list_every_15_min(
     id: UUID,
     booking_date: date | None = None,
     user: UserInfo = Depends(get_user),

@@ -5,6 +5,7 @@ from fastapi import APIRouter, status, HTTPException, Depends
 from routers.schemas import (
     BookingCreate,
     BookingFullInfo,
+    BookingInfo,
     NearestEvents,
     RoomInfo,
     UserInfo,
@@ -141,3 +142,14 @@ async def delete_booking(
     # print()
 
     return NearestEvents(starts_soon=starts_soon, ends_soon=ends_soon)
+
+
+@router.get("/", response_model=List[BookingInfo])
+async def get_booking_list(
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
+):
+    q = select(Booking)
+    bookings = (await session.exec(q)).all()
+
+    return bookings
