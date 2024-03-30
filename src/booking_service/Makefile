@@ -1,4 +1,9 @@
-all: install run
+all: install wait_for_it run
+
+wait_for_it: 
+	chmod +x ./wait-for-it.sh 
+	./wait-for-it.sh -t 120 postgres_service:5432 -- \
+	./wait-for-it.sh -t 120 auth_service:8000
 
 grpc:
 	python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. proto/auth.proto

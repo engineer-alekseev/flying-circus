@@ -1,4 +1,14 @@
-all: install run 
+all: install wait_for_it run
+
+loop:
+	while true; do \
+	  echo		;\
+	  sleep 1 ;\
+	done
+
+wait_for_it: 
+	chmod +x ./wait-for-it.sh 
+	./wait-for-it.sh -t 120 postgres_service:5432
 
 init_migration:
 	-alembic init -t async migrations

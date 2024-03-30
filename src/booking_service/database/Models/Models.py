@@ -65,6 +65,7 @@ class Violation(SQLModel, table=True):
     description: str
     user_id: UUID = Field(foreign_key="user.id")
     booking_id: UUID = Field(foreign_key="booking.id")
+    is_active: bool
 
     # user: list[User] = Relationship(back_populates="user")
     # booking: list[Booking] = Relationship(back_populates="booking")
