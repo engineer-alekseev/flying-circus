@@ -3,12 +3,10 @@ all: install wait_for_it run
 wait_for_it: 
 	chmod +x ./wait-for-it.sh 
 	./wait-for-it.sh -t 120 booking_service:8000
-
-grpc:
-	python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. proto/auth.proto
+	# ./wait-for-it.sh -t 129 redus_service:6379
 
 install:
 	pip install -r requirements.txt
 
 run:
-	python3 main.py
+	celery -A celery_app worker --beat --loglevel=info
