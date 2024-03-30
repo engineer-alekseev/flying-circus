@@ -55,3 +55,14 @@ services:
   #     DB_PASSWORD: "postgres"
   #   ports:
   #     - 8001:8000
+
+  # mail_service:
+  #   build: ./mail_service
+  #   container_name: mail_service
+  #   working_dir: /app
+  #   volumes:
+  #     - ./mail_service:/app
+  #   command: bash -c "python3 main.py"
+  #   environment:
+  #   ports:
+  #     - 8007:8000
