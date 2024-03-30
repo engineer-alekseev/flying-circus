@@ -4,7 +4,7 @@ import json
 import random
 
 AUTH_SERVICE = "http://auth_service:8000"
-
+BOOKING_SERVICE = "http://booking_service:8000"
 
 async def get_data(day):
     lst = [1 if random.random() > 0.5 else 0 for i in range(96)]
@@ -39,7 +39,7 @@ async def info_user(id):
             response_data = await response.text()
             print(response_data)
             return response_data, response.status
+        
+    
 
 
-asyncio.run(register_user("pattycha@student.21-school.ru", f"{246259983}"))
-asyncio.run(info_user(f"{246259983}"))
