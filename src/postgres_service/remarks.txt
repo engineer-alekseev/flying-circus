@@ -1,0 +1,20 @@
+sudo docker run --rm --name my_postgres -p 5431:5432 \
+--mount type=bind,source=/home/prod/cursebow,\
+target=/docker-entrypoint-initdb.d -e POSTGRES_PASSWORD=postgres postgres
+
+
+
+# scp -r -P 2022 ./ prod@bytecode.su:/home/prod/cursebow
+# ssh -p 2022 prod@bytecode.su
+# sqlalchemy.url = postgresql://postgres:postgres@prod.bytecode.su:5431/postgres
+# sqlalchemy.url = postgresql://postgres:postgres@localhost:5431/postgres
+# alembic revision --autogenerate -m "Initial migration"
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Perhaps you should add the directory containing `cairo.pc'
+            to the PKG_CONFIG_PATH environment variable
+            No package 'cairo' found
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Using legacy 'setup.py install' for psycopg2, since package 'wheel' is not installed.
