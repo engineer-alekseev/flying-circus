@@ -7,6 +7,13 @@ from fastapi import FastAPI
 from routers.TgRouter import TgRouter
 import uvicorn
 
+# Спаривание ежа со слоном, часть первая
+# скрещиваем фастапи с тг ботом
+
+
+dp = Dispatcher(storage=MemoryStorage())
+bot = Bot(config.bot_token.get_secret_value())
+
 app = FastAPI(
     title="Auth REST Gateway",
     description="Gateway to authentication and authorization",
@@ -14,18 +21,10 @@ app = FastAPI(
     root_path="/telegram_service",
 )
 
-app.include_router(TgRouter().router)
-
-
-async def job():
-    # job logic
-    pass
-    # await bot.send_message(chat_id = 246259983, text= '123')
-
+app.include_router(TgRouter(bot).router)
 
 async def main():
-    dp = Dispatcher(storage=MemoryStorage())
-    bot = Bot(config.bot_token.get_secret_value())
+
     routers = (
         common.router,
         register.router,
