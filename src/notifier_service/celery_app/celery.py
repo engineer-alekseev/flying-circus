@@ -13,11 +13,11 @@ celery_app = Celery(
 celery_app.conf.timezone = 'UTC'
 
 celery_app.conf.beat_schedule = {
-    'print-hello-every-10-seconds': {
-        'task': 'celery_app.tasks.print_hello',
-        'schedule': timedelta(seconds=10), # 
-        # 'schedule': crontab(minute='*'),
-    },
+    # 'print-hello-every-10-seconds': {
+    #     'task': 'celery_app.tasks.print_hello',
+    #     'schedule': timedelta(seconds=10), # 
+    #     # 'schedule': crontab(minute='*'),
+    # },
     'fetch_data': {
         'task': 'celery_app.tasks.fetch_data_wrapper',
         'schedule': timedelta(seconds=5), # 
