@@ -2,27 +2,24 @@ from celery import shared_task
 from aiohttp import ClientSession
 import asyncio
 
-
-@shared_task
-def print_hello():
-    print("Hello World")
-
-
-# @shared_task(name='fetch_data')
-# async def fetch_data():
-#     url = "http://httpbin.org/get"
-#     async with ClientSession() as session:
-#         async with session.get(url) as response:
-#             data = await response.text()
-#             print(data)
-
-
 async def fetch_data():
-    url = "http://booking_service:8000/booking_service/booking/nearest_events"
-    async with ClientSession() as session:
-        async with session.get(url) as response:
-            data = await response.text()
-            print(f"Response from {url}: {data[:100]}...")
+    data_source_url = "http://booking_service:8000/booking_service/booking/nearest_events"
+    tg_notifier_url = "http://telegram_service:8000/.../..." # TODO(weldonfe): Уточнить у Миши
+    mail_notifiler_url = "http://mail_service:8000/"
+
+    try: # TODO(weldonfe): временный костыль, убрать или перепистать на кастомные исключения 
+        async with ClientSession() as session:
+            async with session.get(data_source_url) as response:
+                data = await response.json()
+
+            async with session.post(url=tg_notifier_url, data=data) as response:
+                    tg_response = await response.json()
+
+            async with session.post(url=mail_notifiler_url, data=data) as response:
+                    mail_response = await response.json()
+    except Exception as e: # TODO(weldonfe): продолжение костыля, см коммент выше
+         print(e)
+    
 
 @shared_task
 def fetch_data_wrapper():
