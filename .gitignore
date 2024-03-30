@@ -6,3 +6,4 @@ venv/
 .vscode/
 celerybeat-schedule
 *.aof
+*.rdb

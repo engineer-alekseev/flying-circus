@@ -24,7 +24,6 @@ async def job():
 
 
 async def main():
-    print("!" * 100)
     dp = Dispatcher(storage=MemoryStorage())
     bot = Bot(config.bot_token.get_secret_value())
     routers = (
