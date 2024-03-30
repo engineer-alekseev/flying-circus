@@ -4,7 +4,6 @@ from uuid import UUID, uuid4
 from sqlmodel import Relationship, SQLModel, Field
 from enum import Enum
 
-
 class Role(str, Enum):
     USER = "user"
     ADMIN = "admin"

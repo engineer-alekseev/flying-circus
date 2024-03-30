@@ -1,0 +1,53 @@
+curl -X POST -H "Content-Type: application/json" -d '{"starts_soon": [{"start_time": "2024-03-30T14:16:04.452Z","end_time": "2024-03-30T14:16:04.452Z","id": "3fa85f64-5717-4562-b3fc-2c963f66afa6","user": {"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6","telegram_id": "string","email": "user@example.com","auth_method": "native","role": "user"},"room": {"name": "string","location": "string","capacity": 4,"min_time": 15,"max_time": 60,"photo_link": "string","id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}}],"ends_soon": [{"start_time": "2024-03-30T14:16:04.452Z", "end_time": "2024-03-30T14:16:04.452Z","id": "3fa85f64-5717-4562-b3fc-2c963f66afa6","user": {"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6","telegram_id": "string","email": "user@example.com","auth_method": "native","role": "user"},"room": {"name": "string","location": "string","capacity": 4,"min_time": 15,"max_time": 60,"photo_link": "string","id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"}}]}' http://localhost:8000/test
+
+
+from fastapi import FastAPI, APIRouter, HTTPException
+from email.message import EmailMessage
+import aiosmtplib
+import asyncio
+from routers.schemas import NearestEvents
+
+app: FastAPI = FastAPI(
+    title="mailing",
+    description="Service to manage mailing",
+    version="0.0.1"
+)
+
+router: APIRouter = APIRouter()
+
+@app.post("/", status_code=201)
+async def parse_data(request: NearestEvents) -> None:
+    data: dict = request.json()
+    data = {
+        "email": "user@example.com",
+        "name": "user"
+    }
+    tasks: list = [send_mail(chunk["email"], chunk["name"]) for chunk in data]
+    await asyncio.gather(*tasks)
+
+async def send_mail(mail: str, message: str) -> None:
+    email: EmailMessage = EmailMessage()
+    email["From"] = "not_reply@bytecode.su"
+    email["To"] = mail
+    email["Subject"] = "Booking_S21_notify"
+    email.set_content(message)
+
+    await aiosmtplib.send(
+        email,
+        hostname="smtp.mail.ru",
+        port=465,
+        use_tls=True,
+        username="not_reply@bytecode.su",
+        password="rhDM2eyJeHxNRbkjk72C"
+    )
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8007,
+        reload=True,
+    )
+
+    {"starts_soon":[{"start_time":"2024-03-30T16:14:58.730000Z","end_time":"2024-03-30T16:14:58.730000Z","user":{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","telegram_id":"string","email":"user@example.com","auth_method":"native","role":"user"},"room":{"name":"string","location":"string","capacity":4,"min_time":15,"max_time":60,"photo_link":"string","id":"3fa85f64-5717-4562-b3fc-2c963f66afa6"}}],"ends_soon":[{"start_time":"2024-03-30T16:14:58.731000Z","end_time":"2024-03-30T16:14:58.731000Z","user":{"id":"3fa85f64-5717-4562-b3fc-2c963f66afa6","telegram_id":"string","email":"user@example.com","auth_method":"native","role":"user"},"room":{"name":"string","location":"string","capacity":4,"min_time":15,"max_time":60,"photo_link":"string","id":"3fa85f64-5717-4562-b3fc-2c963f66afa6"}}]}
