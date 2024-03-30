@@ -1,7 +1,5 @@
-SERVER_DIR := fastapi
-AUTH_SERVER_DIR := fastapi
-DB_DIR := postgres
-DB_CONTAINER_NAME := db
+DB_DIR := postgres_service
+DB_CONTAINER_NAME := postgres_service
 
 all: clean_db 
 	docker-compose up

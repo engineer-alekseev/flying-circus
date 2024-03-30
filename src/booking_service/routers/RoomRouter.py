@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from services.utils import get_overlap_bookings, get_admin, get_user
-from routers.schemas import RoomInfo, BookingInfo, RoomInfoCreate
-from database.database import get_session, select, selectinload
+from routers.schemas import RoomInfo, BookingInfo, RoomInfoCreate, UserInfo
+from database.database import get_session, select, selectinload, AsyncSession
 from database.Models.Models import Room, Booking, User
 from datetime import datetime, timedelta
 
@@ -12,7 +12,9 @@ router = APIRouter(prefix="/rooms", tags=["Rooms"])
 
 
 @router.get("/", response_model=List[RoomInfo])
-async def get_room_list(user: User = Depends(get_user), session=Depends(get_session)):
+async def get_room_list(
+    user: UserInfo = Depends(get_user), session: AsyncSession = Depends(get_session)
+):
     q = select(Room)
     rooms = (await session.exec(q)).all()
 
@@ -21,8 +23,19 @@ async def get_room_list(user: User = Depends(get_user), session=Depends(get_sess
 
 @router.post("/", status_code=201)
 async def create_room(
-    room: RoomInfoCreate, admin: User = Depends(get_admin), session=Depends(get_session)
+    room: RoomInfoCreate,
+    admin: UserInfo = Depends(get_admin),
+    session: AsyncSession = Depends(get_session),
 ):
+    q = select(Room).where(Room.name == room.name)
+    r = (await session.exec(q)).first()
+
+    if r:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Room with this name already exist",
+        )
+
     room = Room(**room.__dict__)
 
     session.add(room)
@@ -32,7 +45,9 @@ async def create_room(
 
 @router.get("/{id}", response_model=RoomInfo)
 async def get_room_list(
-    id: UUID, user: User = Depends(get_user), session=Depends(get_session)
+    id: UUID,
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
 ):
     q = select(Room).where(Room.id == id)
     room = (await session.exec(q)).first()
@@ -51,15 +66,17 @@ async def get_room_list(
     id: UUID,
     start_time: datetime | None = None,
     end_time: datetime | None = None,
-    user: User = Depends(get_user),
-    session=Depends(get_session),
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
 ):
 
     if not start_time:
         start_time = datetime.now()
 
     if not end_time:
-        end_time = start_time.date() + timedelta(days=1)
+        end_time = datetime.combine(
+            start_time.date() + timedelta(days=1), datetime.min.time()
+        )
 
     q = select(Room).where(Room.id == id)
     room = (await session.exec(q)).first()
@@ -70,6 +87,8 @@ async def get_room_list(
             detail="Room with this ID not found",
         )
 
-    overlaps = get_overlap_bookings(room.id, start_time, end_time, session)
+    overlaps: List[Booking] = await get_overlap_bookings(
+        room.id, start_time, end_time, session
+    )
 
     return overlaps

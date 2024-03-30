@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 
 
-from routers.schemas import BookingCreate
+from routers.schemas import BookingCreate, UserInfo
 from database.Models.Models import Role, User, Room, Booking, Violation
 from database.database import get_session, AsyncSession, selectinload, select
 
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/violations", tags=["Violations"])
 
 @router.post("/", status_code=201)
 async def create_violation(
-    admin: User = Depends(get_admin),
+    admin: UserInfo = Depends(get_admin),
     session: AsyncSession = Depends(get_session),
 ):
     pass
@@ -23,7 +23,7 @@ async def create_violation(
 @router.patch("/{id}")
 async def set_violation(
     id: UUID,
-    admin: User = Depends(get_admin),
+    admin: UserInfo = Depends(get_admin),
     session: AsyncSession = Depends(get_session),
 ):
     pass

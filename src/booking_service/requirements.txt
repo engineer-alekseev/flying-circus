@@ -12,3 +12,4 @@ sqlalchemy-utils
 passlib
 pyjwt
 asyncpg
+requests

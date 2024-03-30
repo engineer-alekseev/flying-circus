@@ -14,7 +14,7 @@ class AuthMethod(str, Enum):
     NATIVE = "native"
     GOOGLE = "google"
     GITLAB = "gitlab"
-    TELEGRAM = "gitlab"
+    TELEGRAM = "telegram"
 
 
 class User(SQLModel, table=True):
@@ -26,7 +26,7 @@ class User(SQLModel, table=True):
     auth_method: AuthMethod = Field(default=AuthMethod.TELEGRAM)
     role: Role = Field(default=Role.USER)
 
-    # booking: list["Booking"] = Relationship(back_populates="booking")
+    bookings: list["Booking"] = Relationship(back_populates="user")
     # violations: list["Violation"] = Relationship(back_populates="violations")
 
 
@@ -49,7 +49,7 @@ class Booking(SQLModel, table=True):
     user_id: UUID = Field(foreign_key="user.id")
     room_id: UUID = Field(foreign_key="room.id")
 
-    # users: list[User] = Relationship(back_populates="user")
+    user: User = Relationship(back_populates="bookings")
     room: Room = Relationship(back_populates="bookings")
 
 
