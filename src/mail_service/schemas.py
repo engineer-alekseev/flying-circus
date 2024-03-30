@@ -67,3 +67,8 @@ class BookingFullInfo(Interval):
 class NearestEvents(BaseModel):
     starts_soon: List[BookingFullInfo]
     ends_soon: List[BookingFullInfo]
+
+
+class EmailMessage(BaseModel):
+    email: EmailStr
+    message: str

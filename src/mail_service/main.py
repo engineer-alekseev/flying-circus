@@ -71,8 +71,8 @@ async def send_mail(mail: str, message: str) -> None:
 
 
 @app.post("/send_one_message", status_code=201)
-async def parse_data(email: EmailStr, txt: str) -> None:
-    await send_mail(email, txt)
+async def parse_data(email_message: EmailMessage) -> None:
+    await send_mail(email_message.email, email_message.message)
 
 
 if __name__ == "__main__":
