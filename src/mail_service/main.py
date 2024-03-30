@@ -2,7 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException
 from email.message import EmailMessage
 import aiosmtplib
 import asyncio
-from schemas import NearestEvents
+from schemas import EmailInfo, NearestEvents
 import former
 from pydantic import EmailStr
 
@@ -71,7 +71,7 @@ async def send_mail(mail: str, message: str) -> None:
 
 
 @app.post("/send_one_message", status_code=201)
-async def parse_data(email_message: EmailMessage) -> None:
+async def parse_data(email_message: EmailInfo) -> None:
     await send_mail(email_message.email, email_message.message)
 
 

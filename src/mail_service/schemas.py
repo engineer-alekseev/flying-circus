@@ -69,6 +69,6 @@ class NearestEvents(BaseModel):
     ends_soon: List[BookingFullInfo]
 
 
-class EmailMessage(BaseModel):
+class EmailInfo(BaseModel):
     email: EmailStr
     message: str
