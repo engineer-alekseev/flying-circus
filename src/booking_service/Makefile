@@ -1,4 +1,7 @@
-all: install wait_for_it run
+all: init_timesone install wait_for_it run
+
+init_timesone:
+	date
 
 wait_for_it: 
 	chmod +x ./wait-for-it.sh 

@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 from sqlmodel import Relationship, SQLModel, Field
 from enum import Enum
+import sqlalchemy as sa
 
 
 class Role(str, Enum):
@@ -38,7 +39,7 @@ class Room(SQLModel, table=True):
     min_time: int
     max_time: int
     photo_link: Optional[str]
-    
+
     bookings: list["Booking"] = Relationship(back_populates="room")
 
 

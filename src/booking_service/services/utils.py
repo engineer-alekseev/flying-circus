@@ -16,6 +16,7 @@ def get_user(request: Request) -> UserInfo:
     # ! DEBUG DELETE
     headers = dict(request.headers)
     headers["X-Telegram-ID"] = "123456789"
+    # ! DEBUG DELETE
 
     response = requests.get(url, headers=headers)
 
@@ -48,8 +49,8 @@ async def get_overlap_bookings(
     end_time: datetime,
     session: AsyncSession = Depends(get_session),
 ) -> List[Booking]:
-    start_time = start_time.replace(tzinfo=None)
-    end_time = end_time.replace(tzinfo=None)
+    # start_time = start_time.replace(tzinfo=None)
+    # end_time = end_time.replace(tzinfo=None)
 
     overlap_cond = or_(
         and_(Booking.start_time <= start_time, start_time < Booking.end_time),

@@ -70,8 +70,8 @@ async def create_booking(
             detail="Room is already booked in this time",
         )
 
-    booking.start_time = booking.start_time.replace(tzinfo=None)
-    booking.end_time = booking.end_time.replace(tzinfo=None)
+    # booking.start_time = booking.start_time.replace(tzinfo=None)
+    # booking.end_time = booking.end_time.replace(tzinfo=None)
     print(booking)
     booking = Booking(user_id=user.id, **booking.__dict__)
     session.add(booking)
@@ -131,13 +131,13 @@ async def delete_booking(
         to_booking_full_info(b) for b in bookings if now <= b.end_time <= after_15_min
     ]
 
-    print()
-    print()
-    print(starts_soon)
-    print()
-    print(ends_soon)
-    print(ends_soon[0].user)
-    print()
-    print()
+    # print()
+    # print()
+    # print(starts_soon)
+    # print()
+    # print(ends_soon)
+    # print(ends_soon[0].user)
+    # print()
+    # print()
 
     return NearestEvents(starts_soon=starts_soon, ends_soon=ends_soon)

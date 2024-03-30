@@ -1,9 +1,10 @@
+from config import TIMEZONE
 from fastapi import APIRouter, Depends, HTTPException, status
 from services.utils import get_overlap_bookings, get_admin, get_user
 from routers.schemas import RoomInfo, BookingInfo, RoomInfoCreate, UserInfo
-from database.database import get_session, select, selectinload, AsyncSession
+from database.database import get_session, select, selectinload, AsyncSession, func
 from database.Models.Models import Room, Booking, User
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from typing import List
 from uuid import UUID
@@ -64,19 +65,17 @@ async def get_room_list(
 @router.get("/{id}/booked", response_model=List[BookingInfo])
 async def get_room_list(
     id: UUID,
-    start_time: datetime | None = None,
-    end_time: datetime | None = None,
+    booking_date: date | None = None,
     user: UserInfo = Depends(get_user),
     session: AsyncSession = Depends(get_session),
 ):
+    if not booking_date:
+        booking_date = datetime.now(tz=None).date()
 
-    if not start_time:
-        start_time = datetime.now()
-
-    if not end_time:
-        end_time = datetime.combine(
-            start_time.date() + timedelta(days=1), datetime.min.time()
-        )
+    start_time = datetime.combine(booking_date, datetime.min.time(), tzinfo=None)
+    end_time = datetime.combine(
+        booking_date + timedelta(days=1), datetime.min.time(), tzinfo=None
+    )
 
     q = select(Room).where(Room.id == id)
     room = (await session.exec(q)).first()
@@ -92,3 +91,45 @@ async def get_room_list(
     )
 
     return overlaps
+
+
+@router.get("/{id}/booked_every_15_min", response_model=List[int])
+async def get_room_list(
+    id: UUID,
+    booking_date: date | None = None,
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
+):
+
+    q = select(Room).where(Room.id == id)
+    room = (await session.exec(q)).first()
+
+    if not room:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Room with this ID not found",
+        )
+
+    q = select(Booking).where(func.date(Booking.start_time) == booking_date)
+    bookings = (await session.exec(q)).all()
+
+    bookings = sorted(bookings, key=lambda x: x.start_time)
+    bookings = map(lambda x: x.start_time, bookings)
+    bookings = list(bookings)
+
+    booked_96 = [0] * 96
+
+    for i in bookings:
+        start_time = i.start_time.time()
+        end_time = i.end_time.time()
+
+        hours, minutes = start_time.hour(), start_time.minutes()
+        ind_start = hours * 60 + minutes
+
+        hours, minutes = end_time.hour(), end_time.minutes()
+        ind_end = hours * 60 + minutes
+
+        for ind in range(ind_start, ind_end):
+            booked_96[ind] = 1
+
+    return booked_96

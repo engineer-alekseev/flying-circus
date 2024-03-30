@@ -1,8 +1,9 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 from uuid import UUID
 from database.Models.Models import AuthMethod, Role
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, model_validator
 from datetime import datetime
+from config import TIMEZONE
 
 
 class UserInfo(BaseModel):
@@ -26,9 +27,18 @@ class RoomInfo(RoomInfoCreate):
     id: UUID
 
 
-class BookingCreate(BaseModel):
+class Interval(BaseModel):
     start_time: datetime
     end_time: datetime
+
+    @model_validator(mode="before")
+    def remove_timezone(cls, item: Any) -> Any:
+        if isinstance(item, datetime):
+            item.replace(tzinfo=None)
+        return item
+
+
+class BookingCreate(Interval):
     room_id: UUID
 
 
@@ -37,9 +47,8 @@ class BookingInfo(BookingCreate):
     user_id: UUID
 
 
-class BookingFullInfo(BaseModel):
-    start_time: datetime
-    end_time: datetime
+class BookingFullInfo(Interval):
+    id: UUID
     user: UserInfo
     room: RoomInfo
 
@@ -80,6 +89,7 @@ def to_room_info(item):
 
 def to_booking_full_info(item):
     return BookingFullInfo(
+        id=item.id,
         start_time=item.start_time,
         end_time=item.end_time,
         user=to_user_info(item.user),
