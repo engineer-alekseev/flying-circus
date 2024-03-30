@@ -1,5 +1,5 @@
 import os
-from sqlmodel import SQLModel, select,  and_, or_
+from sqlmodel import SQLModel, select,  and_, or_, func
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker, selectinload

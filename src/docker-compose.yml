@@ -8,61 +8,92 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - ./postgres_service:/docker-entrypoint-initdb.d
+    restart: always
     ports:
       - 5431:5432
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
-  #     PGADMIN_DEFAULT_PASSWORD: adminpassword
-  #     PGADMIN_LISTEN_PORT: 5050
-  #   ports:
-  #     - 5050:5050
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - 5050:5050
 
-  # adminer:
-  #   image: adminer
-  #   container_name: adminer
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
+  auth_service:
+    build: ./auth_service
+    container_name: auth_service
+    working_dir: /app
+    volumes:
+      - ./auth_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    ports:
+      - 8000:8000
 
-  # auth_service:
-  #   build: ./auth_service
-  #   container_name: auth_service
-  #   working_dir: /app
-  #   volumes:
-  #     - ./auth_service:/app
-  #   command: bash -c "make"
-  #   environment:
-  #     DB_USER: "postgres"
-  #     DB_PASSWORD: "postgres"
-  #   ports:
-  #     - 8000:8000
+  booking_service:
+    build: ./booking_service
+    container_name: booking_service
+    working_dir: /app
+    volumes:
+      - ./booking_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+      TZ: "Asia/Novosibirsk"
+    ports:
+      - 8001:8000
 
+  telegram_service:
+    build: ./telegram_service
+    container_name: telegram_service
+    working_dir: /app
+    volumes:
+      - ./telegram_service:/app
+    command: bash -c "make"
+    environment:
+      TZ: "Asia/Novosibirsk"
+    ports:
+      - 8002:8000
 
-  # booking_service:
-  #   build: ./booking_service
-  #   container_name: booking_service
-  #   working_dir: /app
-  #   volumes:
-  #     - ./booking_service:/app
-  #   command: bash -c "make"
-  #   environment:
-  #     DB_USER: "postgres"
-  #     DB_PASSWORD: "postgres"
-  #   ports:
-  #     - 8001:8000
+  notifier_service:
+    build: ./notifier_service
+    container_name: notifier_service
+    working_dir: /app
+    volumes:
+      - ./notifier_service:/app
+    command: bash -c "make"
+    ports:
+      - 8003:8000
 
-  # mail_service:
-  #   build: ./mail_service
-  #   container_name: mail_service
-  #   working_dir: /app
-  #   volumes:
-  #     - ./mail_service:/app
-  #   command: bash -c "python3 main.py"
-  #   environment:
-  #   ports:
-  #     - 8007:8000
+  redis_service:
+    image: redis:6
+    container_name: redis_service
+    command: redis-server --appendonly yes
+    volumes:
+      - ./redis_service:/data
+    ports:
+      - 6379:6379
+
+  mail_service:
+    build: ./mail_service
+    container_name: mail_service
+    working_dir: /app
+    volumes:
+      - ./mail_service:/app
+    command: bash -c "make"
+    ports:
+      - 8004:8000
+    

@@ -33,21 +33,6 @@ async def register(
     await session.commit()
     await session.refresh(user)
 
-
-# @router.get("/{telegram_id}", response_model=User)
-# async def get_user(telegram_id: str, session: AsyncSession = Depends(get_session)):
-#     q = select(User).where(User.telegram_id == telegram_id)
-#     user = (await session.exec(q)).first()
-    
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="User with this telegram ID not found",
-#         )
-
-#     return user
-
-
 @router.get("/user", response_model=User)
 async def auth_by_header(
     telegram_id: str = Depends(get_telegram_id),
@@ -60,7 +45,7 @@ async def auth_by_header(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"User with telegram ID {telegram_id} not found",
-            headers={"WWW-Authenticate": "Basic"},
+            # headers={"WWW-Authenticate": "Basic"},
         )
 
     return user
