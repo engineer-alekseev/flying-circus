@@ -1,4 +1,3 @@
-from config import TIMEZONE
 from fastapi import APIRouter, Depends, HTTPException, status
 from services.utils import get_overlap_bookings, get_admin, get_user
 from routers.schemas import RoomInfo, BookingInfo, RoomInfoCreate, UserInfo

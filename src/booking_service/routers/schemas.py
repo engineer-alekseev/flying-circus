@@ -3,7 +3,6 @@ from uuid import UUID
 from database.Models.Models import AuthMethod, Role
 from pydantic import BaseModel, EmailStr, Field, model_validator
 from datetime import datetime
-from config import TIMEZONE
 
 
 class UserInfo(BaseModel):

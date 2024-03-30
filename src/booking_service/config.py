@@ -14,4 +14,3 @@ DB_URL = f"{DB_DRIVER}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 AUTH_SERVICE = os.getenv("AUTH_SERVICE")
 
-TIMEZONE = pytz.timezone(os.getenv("TIMEZONE"))
