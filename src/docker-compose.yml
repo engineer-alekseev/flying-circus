@@ -55,3 +55,17 @@ services:
       DB_PASSWORD: "postgres"
     ports:
       - 8001:8000
+
+
+  notifier_service:
+    build: ./notifier_service
+    container_name: notifier_service
+    working_dir: /app
+    volumes:
+      - ./notifier_service:/app
+    command: bash -c "make"
+    environment:
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+    ports:
+      - 8002:8000
