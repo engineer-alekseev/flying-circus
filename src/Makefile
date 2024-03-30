@@ -2,7 +2,7 @@ DB_DIR := postgres_service
 DB_CONTAINER_NAME := postgres_service
 
 all: clean_db 
-	docker-compose up
+	docker-compose up -d
 
 clean_db:
 	-docker stop $(DB_CONTAINER_NAME)
