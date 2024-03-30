@@ -15,6 +15,15 @@ router: APIRouter = APIRouter()
 
 @app.post("/", status_code=201)
 async def parse_data(request: NearestEvents) -> None:
+    """
+    Asynchronously parses the incoming request and sends emails to users whose events are starting or ending soon.
+
+    Args:
+        request (NearestEvents): The incoming request containing user data and event information.
+
+    Returns:
+        None
+    """
     data = request.model_dump()
 
     start_tasks: list = [send_mail(chunk["user"]["email"], former.form_string(former.TimeType.START)) for chunk in data["starts_soon"]]
@@ -24,6 +33,16 @@ async def parse_data(request: NearestEvents) -> None:
     await asyncio.gather(*start_tasks)
 
 async def send_mail(mail: str, message: str) -> None:
+    """
+    Asynchronously sends an email with the specified mail and message.
+
+    Args:
+        mail (str): The email address to send the email to.
+        message (str): The message content of the email.
+
+    Returns:
+        None
+    """
     email: EmailMessage = EmailMessage()
     email["From"] = "not_reply@bytecode.su"
     email["To"] = mail
@@ -39,15 +58,11 @@ async def send_mail(mail: str, message: str) -> None:
         password="rhDM2eyJeHxNRbkjk72C"
     )
 
-
-
-
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8007,
+        port=8000,
         reload=True,
     )
