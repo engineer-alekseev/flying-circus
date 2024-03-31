@@ -1,6 +1,11 @@
-# Room Booking
-<img style="display: block; margin: 0 auto; width: 300px; height: 300px;" src="misc/logo.jpg" alt="logo">
-<img style="display: block; margin: 0 auto; width: 300px; height: 300px;" src="misc/name.jpg" alt="name">
+# Room Booking Microservice
+
+<div style="text-align: center;">
+  <img src="misc/logo.jpg" style="width: 300px; height: 300px;" alt="logo">
+</div>
+<div style="text-align: center;">
+  <img src="misc/name.jpg" style="width: 300px; height: 300px;" alt="name">
+</div>
 
 ## Overview
 This microservice application is designed for booking rooms and managing related functionalities. It leverages various technologies and services to provide a seamless experience for users.
