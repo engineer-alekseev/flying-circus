@@ -30,10 +30,10 @@ To run the microservice application locally, follow these steps:
 - Run ***make***
 
 Swagger:
-authserver: auth.bytecode.su/docs
-booking: docs.bytecode.su/docs
-tg: tg.bytecode.su/docs
-mail: mail.bytecode.su/docs
+- authserver: auth.bytecode.su/docs
+- booking: docs.bytecode.su/docs
+- tg: tg.bytecode.su/docs
+- mail: mail.bytecode.su/docs
 
 ## Contributing
 If you would like to contribute to the project, please follow these guidelines:
