@@ -32,12 +32,10 @@ async def email(message: Message, state: FSMContext):
     )
     await state.set_state(Register.confirm_email)
 
-# @router.callback_query(lambda x: x.data in ["Да","Нет"])
-@router.message(Register.confirm_email)
+@router.callback_query(Register.confirm_email)
 async def confirm(message: Message, state: FSMContext):
     data = await state.get_data()
     mess = data.get("mess","None")
-    print(message.data)
     if message.data == "Да":
         data = await state.get_data()
         email = data.get("chosen_email","None")

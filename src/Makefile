@@ -1,10 +1,10 @@
 DB_DIR := postgres_service
 DB_CONTAINER_NAME := postgres_service
 
-all: clean_db up
+all: up
 
 up:
-	docker-compose up -d
+	docker-compose up
 
 down:
 	docker-compose down

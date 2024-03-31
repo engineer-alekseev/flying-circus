@@ -6,16 +6,13 @@ class Register(StatesGroup):
     succsessed = State()
 
 class Booking(StatesGroup):
-    choosing_day = State()
-    choosing_time = State()
     choosing_room = State()
+    choosing_day = State()
+    choosing_interval = State()
+    choosing__start_time = State()
+    choosing__end_time = State()
 
 class Booking_remove(StatesGroup):
     choosing_booking = State()
     confirm = State()
 
-# a = Booking()
-# print(a.choosing_day._state)
-# for i in Booking.__dict__:
-#     if not i.startswith('__'):
-#         print(i)

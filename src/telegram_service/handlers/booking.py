@@ -7,71 +7,115 @@ from keyboards.simple_row import make_row_keyboard
 from datetime import datetime,date,timedelta
 from time_module import get_date_list
 from texts import txt_booking
-from db.reg import get_data
+from db.book import get_data,fetch_rooms, book
 from utils.lst_work import to_times
+
 router = Router()
 
 
 @router.message(Command("booking"))
-async def day(message: Message, state: FSMContext):
+async def room_sel(message: Message, state: FSMContext):
+    lst = await fetch_rooms(message.from_user.id)
     mess = await message.answer(
         text=txt_booking.start,
-        reply_markup = make_row_keyboard([i for i in get_date_list(n=7)],1)
+        reply_markup = make_row_keyboard([f"{i['name']} - {i['location']}" for i in lst],1)
         )
+    lst = {f"{i['name']} - {i['location']}" : i for i in lst}
     await state.update_data(mess=mess)
+    await state.update_data(lst=lst)
+    await state.set_state(Booking.choosing_room)
+
+@router.callback_query(Booking.choosing_room)
+async def date_sel(message: Message, state: FSMContext):
+    data = await state.get_data()
+    room = message.data
+    lst = get_date_list(n=7)
+    await state.update_data(room=room)
+    mess = data.get("mess")
+    mess = await mess.edit_text(
+        text=txt_booking.state.get(Booking.choosing_day._state),
+        reply_markup = make_row_keyboard([i for i in lst],1)
+        )
     await state.set_state(Booking.choosing_day)
 
 @router.callback_query(Booking.choosing_day)
-async def time(message: Message, state: FSMContext):
+async def int_sel(message: Message, state: FSMContext):
     data = await state.get_data()
+    day_ = message.data
+    await state.update_data(day=day_)
+    room = data.get("room")
+    lst = data.get("lst")
+    room = lst[room]["id"]
+    await state.update_data(room=room)
     mess = data.get("mess")
-    lst = await get_data(day)
+    day =datetime.strptime(message.data,"%A %d %b %Y").strftime("%Y-%m-%d")
+    lst = await get_data(room,day,message.from_user.id)
     lst = await to_times(lst)
-    print(lst)
+    mess = await mess.edit_text(
+        text=txt_booking.state.get(Booking.choosing_interval._state),
+        reply_markup = make_row_keyboard([i for i in lst],1)
+        )
+    await state.set_state(Booking.choosing_interval)
+
+
+@router.callback_query(Booking.choosing_interval)
+async def start_time(message: Message, state: FSMContext):
+    data = await state.get_data()
+    interval = message.data
+    await state.update_data(interval=interval)
+    mess = data.get("mess")
+    ans = []
+    start, end = interval.split("-")
+    start = int(start.split(":")[0])*60+int(start.split(":")[1])
+    end = int(end.split(":")[0])*60+int(end.split(":")[1])
+    while start < end:
+        ans.append(start)
+        start+=15
+    ans = list(map(lambda x:f"{x//60:0{2}d}:{x%60:0{2}d}",ans))
+
     await mess.edit_text(
-        text=txt_booking.state.get(Booking.choosing_day._state),
-        reply_markup  = make_row_keyboard(lst,1)
+        text=txt_booking.state.get(Booking.choosing__start_time._state),
+        reply_markup  = make_row_keyboard(ans,8)
     )
-    await state.set_state(Booking.choosing_time)
+    await state.set_state(Booking.choosing__start_time)
 
-# @router.callback_query(lambda x: x.data in ["Да","Нет"])
-# @router.message(Register.confirm_email)
-# async def confirm(message: Message, state: FSMContext):
-#     data = await state.get_data()
-#     mess = data.get("mess","None")
-#     print(message.data)
-#     if message.data == "Да":
-#         data = await state.get_data()
-#         email = data.get("chosen_email","None")
-#         token = await generate_token(message.from_user.id,email)
-#         try:
-#             await send_mail(email,token)
-#         except:
-#             pass
-#         await state.update_data(token=token)
-#         await mess.edit_text(
-#             text=txt_register.state.get(Register.confirm_email._state),
-#         )
-#         await state.set_state(Register.succsessed)
-#     else:
-#         await state.set_state(Register.choosing_email)
-#         await mess.edit_text(
-#             text=txt_register.start,
-#         )
-        
+@router.callback_query(Booking.choosing__start_time)
+async def start_time(message: Message, state: FSMContext):
+    data = await state.get_data()
+    interval = data.get("interval")
+    start_time =  message.data
+    await state.update_data(start_time=start_time)
+    mess = data.get("mess")
+    ans = []
+    end = interval.split("-")[1]
+    start = start_time
+    start = int(start.split(":")[0])*60+int(start.split(":")[1])
+    end = int(end.split(":")[0])*60+int(end.split(":")[1])
+    n=0
+    while start < end:
+        start+=15
+        ans.append(start)
+        n+=1
+        if n==4: break
+    ans = list(map(lambda x:f"{start_time} - {x//60:0{2}d}:{x%60:0{2}d}",ans))
+    
+    await mess.edit_text(
+        text=txt_booking.state.get(Booking.choosing__end_time._state),
+        reply_markup  = make_row_keyboard(ans,1)
+    )
+    await state.set_state(Booking.choosing__end_time)
 
-# @router.message(Register.succsessed)
-# async def confirm(message: Message, state: FSMContext):
-#     data = await state.get_data()
-#     mess = data.get("mess","None")
-#     email = data.get("chosen_email","None")
-#     token_saved = data.get("token","None")
-#     if token_saved == message.text and decode_token(token_saved):
-#         status = await register_user(email,str(message.from_user.id))
-#     await mess.edit_text(
-#         text=txt_register.state.get(Register.succsessed._state),
-#     )
-#     await state.clear()
-#     await state.set_data({})
-
-
+@router.callback_query(Booking.choosing__end_time)
+async def start_time(message: Message, state: FSMContext):
+    data = await state.get_data()
+    interval = message.data
+    await state.update_data(start_time=start_time)
+    mess = data.get("mess")
+    day_ = data.get("day")
+    room = data.get("room")
+    raise Exception(day_, interval,room)
+    await mess.edit_text(
+        text=txt_booking.finish,
+    )
+    await state.clear()
+    await state.set_data({})

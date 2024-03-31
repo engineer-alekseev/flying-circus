@@ -38,7 +38,7 @@ async def main():
 async def start_server():
     # Конфигурация и запуск сервера
     config = uvicorn.Config(
-        "main:app", host="0.0.0.0", port=8000, loop="asyncio", reload=False
+        "main:app", host="0.0.0.0", port=8000, loop="asyncio", reload=True
     )
     server = uvicorn.Server(config)
     await server.serve()

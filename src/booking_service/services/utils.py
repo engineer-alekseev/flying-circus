@@ -15,7 +15,7 @@ def get_user(request: Request) -> UserInfo:
 
     # ! DEBUG DELETE
     headers = dict(request.headers)
-    headers["X-Telegram-ID"] = "123456789"
+    # headers["X-Telegram-ID"] = "123456789"
     # ! DEBUG DELETE
 
     response = requests.get(url, headers=headers)
@@ -23,7 +23,7 @@ def get_user(request: Request) -> UserInfo:
     if response.status_code != 200:
         raise HTTPException(
             status_code=response.status_code,
-            detail=response.detail,
+            detail=response.text,
         )
 
     user = response.json()
