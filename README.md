@@ -1,4 +1,4 @@
-# Room Booking Microservice
+# Room Booking
 <p align="center">
   <img src="misc/logo.jpg" style="width: 100px; height: 100px;" alt="logo">
   <img src="misc/name.jpg" style="height: 100px;" alt="name">
