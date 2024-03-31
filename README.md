@@ -1,6 +1,7 @@
-# Room Booking Microservice
-
+# Room Booking
+<div style = "text-align: center">
 <img style="width: 300, height: 300, align='center'" src="misc/logo.jpg" alt="logo">
+</div>
 <img style="width: 300, height: 300, align='center'" src="misc/name.jpg" alt="name">
 
 ## Overview
