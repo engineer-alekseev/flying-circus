@@ -29,6 +29,7 @@ To run the microservice application locally, follow these steps:
 - Install Docker and Docker Compose.
 - Run ***make***
 
+Swagger:
 - [authserver](https://auth.bytecode.su/docs)
 - [booking](https://docs.bytecode.su/docs)
 - [tg](https://tg.bytecode.su/docs)
