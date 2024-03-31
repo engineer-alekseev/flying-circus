@@ -15,7 +15,7 @@ from database.Models.Models import Role, User, Room, Booking, Violation
 from database.database import get_session, AsyncSession, selectinload, select, and_, or_
 
 from uuid import UUID
-from services.utils import get_overlap_bookings, get_user
+from services.utils import get_overlap_bookings, get_user, check_booking
 from datetime import datetime, timedelta, UTC
 
 router = APIRouter(prefix="/booking", tags=["Booking"])
@@ -27,17 +27,6 @@ async def create_booking(
     user: UserInfo = Depends(get_user),
     session: AsyncSession = Depends(get_session),
 ):
-    q = select(Violation).where(
-        Violation.user_id == user.id and Violation.is_active == True
-    )
-    violations = (await session.exec(q)).first()
-
-    if violations:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="The user is limited in booking rooms",
-        )
-
     q = select(Room).where(Room.id == booking.room_id)
     room = (await session.exec(q)).first()
 
@@ -47,17 +36,8 @@ async def create_booking(
             detail="Room with this ID not found",
         )
 
-    min_time = timedelta(minutes=room.min_time)
-    max_time = timedelta(minutes=room.max_time)
-    delta = booking.end_time - booking.start_time
-
-    if not min_time <= delta <= max_time:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect booking time. Min time: {} Max time: {} Requested time: {}".format(
-                room.min_time, room.max_time, delta
-            ),
-        )
+    if user.role != Role.ADMIN:
+        await check_booking(booking, room, user, session)
 
     overlaps: List[Booking] = await get_overlap_bookings(
         room.id, booking.start_time, booking.end_time, session
@@ -71,9 +51,6 @@ async def create_booking(
             detail="Room is already booked in this time",
         )
 
-    # booking.start_time = booking.start_time.replace(tzinfo=None)
-    # booking.end_time = booking.end_time.replace(tzinfo=None)
-    print(booking)
     booking = Booking(user_id=user.id, **booking.__dict__)
     session.add(booking)
     await session.commit()
@@ -101,6 +78,13 @@ async def delete_booking(
             detail="You don't have permission to delete this booking",
         )
 
+    min_15_from_now = datetime.now(tz=None) + timedelta(minutes=15)
+    if booking.start_time <= min_15_from_now and user.role != Role.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Can not delete booking already",
+        )
+
     await session.delete(booking)
     await session.commit()
 
@@ -109,7 +93,7 @@ async def delete_booking(
 async def delete_booking(
     session: AsyncSession = Depends(get_session),
 ):
-    now = datetime.now()
+    now = datetime.now(tz=None)
     after_15_min = now + timedelta(minutes=15)
 
     q = (
