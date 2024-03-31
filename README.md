@@ -1,4 +1,4 @@
-# Room Booking Microservice
+# Room Booking
 <p align="center">
   <img src="misc/logo.jpg" style="width: 100px; height: 100px;" alt="logo">
   <img src="misc/name.jpg" style="height: 100px;" alt="name">
@@ -29,10 +29,11 @@ To run the microservice application locally, follow these steps:
 - Install Docker and Docker Compose.
 - Run ***make***
 
-
-
-
-
+Swagger:
+authserver: auth.bytecode.su/docs
+booking: docs.bytecode.su/docs
+tg: tg.bytecode.su/docs
+mail: mail.bytecode.su/docs
 
 ## Contributing
 If you would like to contribute to the project, please follow these guidelines:
