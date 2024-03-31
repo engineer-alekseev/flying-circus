@@ -60,7 +60,7 @@ async def get_overlap_bookings(
 
     q = select(Booking).where(Booking.room_id == room_id).where(overlap_cond)
     overlaps = (await session.exec(q)).all()
-    
+
     print()
     print()
     print(overlaps, flush=True)
@@ -107,13 +107,14 @@ async def check_booking(
         )
 
     q = select(Booking).where(
-     and_(   Booking.user_id == user.id, 
-         func.date(Booking.start_time) == booking.start_time.date())
+        and_(
+            Booking.user_id == user.id,
+            func.date(Booking.start_time) == booking.start_time.date(),
+        )
     )
     peer_booking = (await session.exec(q)).first()
 
     if peer_booking:
-        print(f"This peer already booked room on this date: {booking.start_time.date()}", flush=True)
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"This peer already booked room on this date: {booking.start_time.date()}",

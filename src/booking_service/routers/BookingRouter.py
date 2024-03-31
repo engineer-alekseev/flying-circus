@@ -136,6 +136,7 @@ async def get_booking_list(
 
     return bookings
 
+
 @router.get("/by_user", response_model=List[BookingInfo])
 async def get_booking_list_by_user(
     user: UserInfo = Depends(get_user),

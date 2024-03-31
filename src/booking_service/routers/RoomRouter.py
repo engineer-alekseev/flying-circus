@@ -146,7 +146,7 @@ async def get_room_booking_list_every_15_min(
 
         hours, minutes = end_time.hour, end_time.minute
         ind_end = (hours * 60 + minutes) // 15
-        
+
         for ind in range(ind_start, ind_end):
             booked_96[ind] = 1
 
