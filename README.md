@@ -29,10 +29,10 @@ To run the microservice application locally, follow these steps:
 - Install Docker and Docker Compose.
 - Run ***make***
 
-
-
-
-
+[authserver](https://auth.bytecode.su/docs)
+[booking](https://docs.bytecode.su/docs)
+[tg](https://tg.bytecode.su/docs)
+[mail](https://mail.bytecode.su/docs)
 
 ## Contributing
 If you would like to contribute to the project, please follow these guidelines:
