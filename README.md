@@ -1,7 +1,7 @@
 # Room Booking Microservice
 <p align="center">
-  <img src="misc/logo.jpg" style="width: 300px; height: 300px;" alt="logo">
-  <img src="misc/name.jpg" style="height: 300px;" alt="name">
+  <img src="misc/logo.jpg" style="width: 100px; height: 100px;" alt="logo">
+  <img src="misc/name.jpg" style="height: 100px;" alt="name">
 </p>
 
 ## Overview
