@@ -112,3 +112,15 @@ services:
       - 5555:5555
     depends_on:
       - redis_service
+
+  front_service:
+    build: ./front_service
+    container_name: front_service
+    working_dir: /app
+    command: bash -c "yarn install; yarn dev;"
+    volumes:
+      - ./front_service:/app
+    env_file:
+      - ./front_service/.env
+    ports: 
+      - 13501:13501

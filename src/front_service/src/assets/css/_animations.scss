@@ -1,0 +1,153 @@
+@keyframes Hint_show {
+  0% {
+    opacity: 0;
+    transform:translateY(-6px)
+  }
+
+  to {
+    opacity: 1;
+    transform:translateY(0)
+  }
+}
+
+@keyframes ModalShow {
+  0% {
+    opacity: 0;
+    transform:translateY(-10px)
+  }
+
+  to {
+    opacity: 1;
+    transform:translateY(0)
+  }
+}
+@keyframes loading {
+  from {
+    background: $loading-background;
+    border-color: $loading-border;
+  }
+  50% {
+    background: $loading-process;
+    border-color: $loading-process;
+  }
+  to {
+    background: $loading-background;
+    border-color: $loading-border;
+  }
+}
+
+.opacity-bottom-slow {
+  &-enter-active,
+  &-leave-active {
+    transition: transform .2s ease-out, opacity .2s ease-out;
+    will-change: transform, opacity;
+  }
+
+  &-enter,
+  &-leave-to {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+
+.opacity-bottom {
+  &-enter-active,
+  &-leave-active {
+    transition: transform .2s, opacity .2s;
+    will-change: transform, opacity;
+  }
+
+  &-enter,
+  &-leave-to {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+.opacity {
+  &-enter-active,
+  &-leave-active {
+    transition: opacity .2s;
+    will-change: opacity;
+  }
+
+  &-enter,
+  &-leave-to {
+    opacity: 0;
+  }
+}
+
+.slide-right {
+  &-enter-active,
+  &-leave-active {
+    transition: transform .2s ease-out;
+    will-change: transform;
+
+  }
+
+  &-enter,
+  &-leave-to {
+    transform: translateX(100%);
+  }
+}
+
+/* animations */
+.opacity {
+  &-enter-active, &-leave-active {
+    transition: opacity .1s;
+  }
+  &-enter, &-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+    transition: opacity .1s;
+  }
+}
+
+.down-open  {
+  &-enter-active, &-leave-active {
+    transition: all .1s;
+    will-change: transform;
+  }
+  &-enter, &-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+    transform: translate3d( 0, 50px, 0);
+  }
+}
+
+.tab {
+  &-enter-active, &-leave-active {
+    transition: all .3s;
+    will-change: transform;
+  }
+  &-enter, &-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+    transform: translate3d( 0, 50px, 0);
+  }
+}
+.slide-left {
+  &-enter,
+  &-leave-to {
+    opacity: 0;
+    top: 0;
+    position: absolute;
+    transform: translateX(-50px);
+  }
+
+  &-enter-active,
+  &-leave-active {
+    transition: all .3s;
+  }
+}
+.slide-top {
+  &-enter,
+  &-leave-to {
+    opacity: 0;
+    position: absolute;
+    transform: translateY(50px);
+  }
+
+  &-enter-active,
+  &-leave-active {
+    transition: all .3s;
+  }
+}
+

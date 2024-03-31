@@ -26,7 +26,6 @@ async def cmd_reg(message: Message, state: FSMContext):
 async def email(message: Message, state: FSMContext):
     await state.update_data(chosen_email=message.text.lower())
     data = await state.get_data()
-    
     mess = data.get("mess","None")
     await mess.edit_text(
         text=txt_register.state.get(Register.choosing_email._state),

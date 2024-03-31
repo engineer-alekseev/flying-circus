@@ -115,13 +115,18 @@ async def start_time(message: Message, state: FSMContext):
     mess = data.get("mess")
     day_ = data.get("day")
     room = data.get("room")
+    lst = data.get("lst")
+    for i in lst:
+        if lst[i]['id'] == room:
+            name = i
+            urlka = lst[i]["photo_link"]
     day_ =datetime.strptime(day_,"%A %d %b %Y").strftime("%Y-%m-%d")
     start,finish = interval.split("-")
     start = f"{day_} {start}"
     finish = f"{day_} {finish}"
     await book(start,finish,room,message.from_user.id)
     await mess.edit_text(
-        text=txt_booking.finish,
+        text=f"{txt_booking.finish}\n{name}\n{urlka}",
     )
     await state.clear()
     await state.set_data({})

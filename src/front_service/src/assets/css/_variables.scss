@@ -1,0 +1,177 @@
+$fields-grey: rgb(219, 219, 219);
+$fields-focus: #3e49c1;
+$fields-error: red;
+$fields-hover: rgb(232, 232, 232);
+$fields-background: white;
+$fields-radius: 5px;
+
+$color-purple: #3e49c1;
+$color-purple-light: rgba(78, 89, 251, 0.58);
+$color-red: red;
+$color-green: #42b983;
+$color-yellow: rgb(255, 242, 0);
+
+//$color-black: #000;
+//
+//$color-grey-ultralight: #F7F8FA;
+//$color-grey-light: #E8E9ED;
+//$color-grey: #ADAEB3;
+//$color-grey-dark: #737478;
+
+$font-title: "San Francisco";//'Inter', sans-serif;
+$font-text: "San Francisco";//'Inter', sans-serif;
+
+$background: #f4f6f8;
+
+$color-blue: #0A5DFF;
+$color-blue-light: rgba(10, 93, 255, 0.2);
+$color-white: #FFFFFF;
+$color-black: #070708;
+$color-black-notification: rgba(7, 7, 8, 1);
+$color-black-light: #1b1b1b;
+$color-black-ultralight: #4f4f51;
+
+$color-orange: #FFA800;
+$color-orange-light: rgba(255, 168, 0, 0.1);
+
+$color-green: #20C933;
+$color-green-light: rgba(32, 201, 51, 0.1);
+
+$color-red: #F23D3D;
+$color-red-light: rgba(255, 66, 66, 0.1);
+
+$color-grey-ultralight: #F7F8FA;
+$color-grey-light: #E8E9ED;
+$color-grey: #ADAEB3;
+$color-grey-dark: #737478;
+
+$color-purple: #624CE0;
+$color-purple-light: rgba(98, 76, 224, 0.1);
+
+$side-menu-width: 260px;
+
+$input-box-shadow:  0px 4px 3px rgba(0, 0, 0, 0.02);
+$input-border: 1px solid $color-grey-light;
+
+$loading-border: rgb(0, 0, 0);
+$loading-background: rgb(219, 219, 219);
+$loading-process: $color-grey-light;
+
+$sidebar_width: 265px;
+
+$header-height: 54px;
+
+$screens: (
+  wide: 1300,
+  large: 1200,
+  medium: 992,
+  small: 767,
+  exsm: 576
+);
+
+@mixin media($value) {
+  $width: map_get($screens, $value);
+  @if ($width != 0) {
+    @media screen and (max-width: $width) {
+      @content
+    }
+  }
+}
+
+
+//
+// UI KIT
+//
+@mixin fieldBase {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 40px;
+  color: $color-black;
+  width: 100%;
+  border-radius: 0;
+  overflow: hidden;
+  transition: background-color .2s;
+
+  @include media(exsm) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@mixin fieldValueBase {
+  padding: 12px 11px;
+  border: $input-border;
+  flex-grow: 1;
+  border-radius: 0;
+  max-width: 100%;
+
+  &:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+}
+
+@mixin fieldDisabled {
+  background-color: $color-grey-light;
+  color: $color-grey;
+  cursor: not-allowed;
+}
+
+@mixin fieldUnderText {
+  text-align: left;
+  margin-top: 0;
+  transform: translateY(-2em);
+  opacity: 0;
+  transition: transform .2s, opacity .2s, margin-top .2s, color .2s, height .2s ease .2s;
+  will-change: opacity, transform, margin-top, color;
+  display: flex;
+  margin-bottom: 0;
+
+  &._show {
+    opacity: 1;
+    transform: none;
+    margin-top: .6em;
+  }
+
+  &._absolute {
+    position: absolute;
+
+    @include media(exsm) {
+      position: relative;
+    }
+  }
+
+  .ui-icon {
+    margin-right: 10px;
+  }
+}
+
+@mixin limitString {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+//
+// END UI KIT
+//
+
+@mixin defaultLinkStyle {
+  color: #fff;// $color-blue-dark;
+  text-decoration: underline;
+  transition: color .2s;
+
+  &:hover {
+    color: $color-black;
+  }
+}
+
+@mixin inputNormalize {
+  border: none;
+}
+
