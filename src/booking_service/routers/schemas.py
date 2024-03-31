@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 from uuid import UUID
-from database.Models.Models import AuthMethod, Role
+from database.Models.Models import AuthMethod, Role, ViolationType
 from pydantic import BaseModel, EmailStr, Field, model_validator
 from datetime import datetime
 
@@ -57,11 +57,16 @@ class NearestEvents(BaseModel):
     ends_soon: List[BookingFullInfo]
 
 
-# class Violation(BaseModel):
-#     violation_type: str
-#     description: str
-#     user_id: int
-#     booking_id: int
+class ViolationCreate(BaseModel):
+    violation_type: ViolationType
+    description: str
+    user_id: UUID
+    booking_id: UUID
+    is_active: bool
+
+
+class ViolationInfo(ViolationCreate):
+    id: UUID
 
 
 def to_user_info(item):

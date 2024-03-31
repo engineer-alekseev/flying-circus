@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from services.utils import get_overlap_bookings, get_admin, get_user
 from routers.schemas import RoomInfo, BookingInfo, RoomInfoCreate, UserInfo
-from database.database import get_session, select, selectinload, AsyncSession, func
-from database.Models.Models import Room, Booking, User
+from database.database import get_session, select, AsyncSession, func
+from database.Models.Models import Room, Booking
 from datetime import date, datetime, timedelta
 
 from typing import List
@@ -13,7 +13,8 @@ router = APIRouter(prefix="/rooms", tags=["Rooms"])
 
 @router.get("/", response_model=List[RoomInfo])
 async def get_room_list(
-    user: UserInfo = Depends(get_user), session: AsyncSession = Depends(get_session)
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
 ):
     q = select(Room)
     rooms = (await session.exec(q)).all()
@@ -41,6 +42,25 @@ async def create_room(
     session.add(room)
     await session.commit()
     await session.refresh(room)
+
+
+@router.delete("/{id}", status_code=201)
+async def delete_room(
+    id: UUID,
+    admin: UserInfo = Depends(get_admin),
+    session: AsyncSession = Depends(get_session),
+):
+    q = select(Room).where(Room.id == id)
+    room = (await session.exec(q)).first()
+
+    if not room:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Room with this ID not found",
+        )
+
+    await session.delete(room)
+    await session.commit()
 
 
 @router.get("/{id}", response_model=RoomInfo)
@@ -99,6 +119,8 @@ async def get_room_booking_list_every_15_min(
     user: UserInfo = Depends(get_user),
     session: AsyncSession = Depends(get_session),
 ):
+    if not booking_date:
+        booking_date = datetime.now(tz=None).date()
 
     q = select(Room).where(Room.id == id)
     room = (await session.exec(q)).first()

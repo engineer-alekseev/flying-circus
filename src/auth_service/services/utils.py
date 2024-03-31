@@ -8,7 +8,7 @@ def get_telegram_id(request: Request):
 
     if id is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Invalid Auth Header "X-Telegram-ID"',
         )
 
