@@ -30,12 +30,15 @@ class Interval(BaseModel):
     start_time: datetime
     end_time: datetime
 
-    @model_validator(mode="before")
-    def remove_timezone(cls, item: Any) -> Any:
-        if isinstance(item, datetime):
-            item.replace(tzinfo=None)
-        return item
-
+    @model_validator(mode='after')
+    def remove_timezones(self) -> 'Interval':
+        try:
+            self.start_time=self.start_time.replace(tzinfo=None)
+            self.end_time=self.end_time.replace(tzinfo=None)
+        except:
+            raise ValueError('Invalid datetimes')
+            
+        return self
 
 class BookingCreate(Interval):
     room_id: UUID

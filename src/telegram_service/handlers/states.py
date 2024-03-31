@@ -12,7 +12,7 @@ class Booking(StatesGroup):
     choosing__start_time = State()
     choosing__end_time = State()
 
-class Booking_remove(StatesGroup):
+class My_bookings(StatesGroup):
     choosing_booking = State()
     confirm = State()
 

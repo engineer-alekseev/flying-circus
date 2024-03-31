@@ -2,7 +2,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from config_reader import config
-from handlers import common, register, info, booking
+from handlers import common, register, info, booking, my_bookings
 from fastapi import FastAPI
 from routers.TgRouter import TgRouter
 import uvicorn
@@ -30,6 +30,7 @@ async def main():
         register.router,
         info.router,
         booking.router,
+        my_bookings.router
     )
     list(map(dp.include_router, routers))
     await dp.start_polling(bot)

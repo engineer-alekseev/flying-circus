@@ -14,6 +14,8 @@ router = Router()
 
 @router.message(Command("register"))
 async def cmd_reg(message: Message, state: FSMContext):
+    await state.clear()
+    await state.set_data({})
     mess = await message.answer(
         text=txt_register.start,
         )
@@ -40,15 +42,15 @@ async def confirm(message: Message, state: FSMContext):
         data = await state.get_data()
         email = data.get("chosen_email","None")
         token = await generate_token(message.from_user.id,email)
-        try:
-            await send_mail(email,token)
-        except:
-            pass
-        await state.update_data(token=token)
-        await mess.edit_text(
-            text=txt_register.state.get(Register.confirm_email._state),
-        )
-        await state.set_state(Register.succsessed)
+    
+        code = await send_mail(email,token)
+        if code ==201:
+            await state.update_data(token=token)
+            await mess.edit_text(
+                text=txt_register.state.get(Register.confirm_email._state) + f"\n\n{code}",
+            )
+            await state.set_state(Register.succsessed)
+        
     else:
         await state.set_state(Register.choosing_email)
         await mess.edit_text(

@@ -7,7 +7,7 @@ from keyboards.simple_row import make_row_keyboard
 from datetime import datetime,date,timedelta
 from time_module import get_date_list
 from texts import txt_booking
-from db.book import get_data,fetch_rooms, book
+from db.book import fetch_rooms, book, get_books
 from utils.lst_work import to_times
 
 router = Router()
@@ -16,6 +16,8 @@ router = Router()
 @router.message(Command("booking"))
 async def room_sel(message: Message, state: FSMContext):
     lst = await fetch_rooms(message.from_user.id)
+    await state.clear()
+    await state.set_data({})
     mess = await message.answer(
         text=txt_booking.start,
         reply_markup = make_row_keyboard([f"{i['name']} - {i['location']}" for i in lst],1)
@@ -49,7 +51,7 @@ async def int_sel(message: Message, state: FSMContext):
     await state.update_data(room=room)
     mess = data.get("mess")
     day =datetime.strptime(message.data,"%A %d %b %Y").strftime("%Y-%m-%d")
-    lst = await get_data(room,day,message.from_user.id)
+    lst = await get_books(room,day,message.from_user.id)
     lst = await to_times(lst)
     mess = await mess.edit_text(
         text=txt_booking.state.get(Booking.choosing_interval._state),
@@ -75,7 +77,7 @@ async def start_time(message: Message, state: FSMContext):
 
     await mess.edit_text(
         text=txt_booking.state.get(Booking.choosing__start_time._state),
-        reply_markup  = make_row_keyboard(ans,8)
+        reply_markup  = make_row_keyboard(ans,4)
     )
     await state.set_state(Booking.choosing__start_time)
 

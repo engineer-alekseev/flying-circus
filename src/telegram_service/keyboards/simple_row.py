@@ -3,10 +3,13 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
     # return keyboard
 
-def make_row_keyboard(items: list[str], n = 0):
+def make_row_keyboard(items: list[str], n = 0,spl = False):
     if not n: n = len(items)
     builder = InlineKeyboardBuilder()
-    builder.row(*list(map(lambda index:InlineKeyboardButton(text=index, callback_data = index),items)), width=n)
+    if not spl:
+        builder.row(*list(map(lambda index:InlineKeyboardButton(text=index, callback_data = index),items)), width=n)
+    else:
+        builder.row(*list(map(lambda index:InlineKeyboardButton(text=index.split("!")[0], callback_data = index.split("!")[1]),items)), width=n)
     return builder.as_markup()
 
 def make_yn_keyboard():
