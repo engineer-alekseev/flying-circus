@@ -97,7 +97,7 @@ async def start_time(message: Message, state: FSMContext):
         ans.append(start)
         n+=1
         if n==4: break
-    ans = list(map(lambda x:f"{start_time} - {x//60:0{2}d}:{x%60:0{2}d}",ans))
+    ans = list(map(lambda x:f"{start_time}-{x//60:0{2}d}:{x%60:0{2}d}",ans))
     
     await mess.edit_text(
         text=txt_booking.state.get(Booking.choosing__end_time._state),
@@ -113,7 +113,11 @@ async def start_time(message: Message, state: FSMContext):
     mess = data.get("mess")
     day_ = data.get("day")
     room = data.get("room")
-    raise Exception(day_, interval,room)
+    day_ =datetime.strptime(day_,"%A %d %b %Y").strftime("%Y-%m-%d")
+    start,finish = interval.split("-")
+    start = f"{day_} {start}"
+    finish = f"{day_} {finish}"
+    await book(start,finish,room,message.from_user.id)
     await mess.edit_text(
         text=txt_booking.finish,
     )

@@ -15,7 +15,7 @@ def get_user(request: Request) -> UserInfo:
 
     # ! DEBUG DELETE
     headers = dict(request.headers)
-    # headers["X-Telegram-ID"] = "123456782"
+    # headers["X-Telegram-ID"] = "246259983"
     # ! DEBUG DELETE
 
     response = requests.get(url, headers=headers)

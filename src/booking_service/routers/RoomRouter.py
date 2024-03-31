@@ -135,21 +135,18 @@ async def get_room_booking_list_every_15_min(
     bookings = (await session.exec(q)).all()
 
     bookings = sorted(bookings, key=lambda x: x.start_time)
-    bookings = map(lambda x: x.start_time, bookings)
-    bookings = list(bookings)
-
     booked_96 = [0] * 96
 
     for i in bookings:
         start_time = i.start_time.time()
         end_time = i.end_time.time()
 
-        hours, minutes = start_time.hour(), start_time.minutes()
-        ind_start = hours * 60 + minutes
+        hours, minutes = start_time.hour, start_time.minute
+        ind_start = (hours * 60 + minutes) // 15
 
-        hours, minutes = end_time.hour(), end_time.minutes()
-        ind_end = hours * 60 + minutes
-
+        hours, minutes = end_time.hour, end_time.minute
+        ind_end = (hours * 60 + minutes) // 15
+        
         for ind in range(ind_start, ind_end):
             booked_96[ind] = 1
 

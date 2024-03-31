@@ -43,8 +43,6 @@ async def create_booking(
         room.id, booking.start_time, booking.end_time, session
     )
 
-    print(overlaps)
-
     if overlaps != []:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
