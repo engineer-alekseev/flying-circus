@@ -15,7 +15,7 @@ def get_user(request: Request) -> UserInfo:
 
     # ! DEBUG DELETE
     headers = dict(request.headers)
-    # headers["X-Telegram-ID"] = "246259983"
+    # headers["X-Telegram-ID"] = "572276281"
     # ! DEBUG DELETE
 
     response = requests.get(url, headers=headers)
@@ -60,6 +60,12 @@ async def get_overlap_bookings(
 
     q = select(Booking).where(Booking.room_id == room_id).where(overlap_cond)
     overlaps = (await session.exec(q)).all()
+    
+    print()
+    print()
+    print(overlaps, flush=True)
+    print()
+    print()
 
     return overlaps
 
@@ -101,12 +107,13 @@ async def check_booking(
         )
 
     q = select(Booking).where(
-        Booking.user_id == user.id
-        and func.date(Booking.start_time) == booking.start_time.date()
+     and_(   Booking.user_id == user.id, 
+         func.date(Booking.start_time) == booking.start_time.date())
     )
     peer_booking = (await session.exec(q)).first()
 
     if peer_booking:
+        print(f"This peer already booked room on this date: {booking.start_time.date()}", flush=True)
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"This peer already booked room on this date: {booking.start_time.date()}",

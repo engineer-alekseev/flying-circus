@@ -88,7 +88,7 @@ async def delete_booking(
 
 
 @router.get("/nearest_events")
-async def delete_booking(
+async def get_nearest_events(
     session: AsyncSession = Depends(get_session),
 ):
     now = datetime.now(tz=None)
@@ -132,6 +132,16 @@ async def get_booking_list(
     session: AsyncSession = Depends(get_session),
 ):
     q = select(Booking)
+    bookings = (await session.exec(q)).all()
+
+    return bookings
+
+@router.get("/by_user", response_model=List[BookingInfo])
+async def get_booking_list_by_user(
+    user: UserInfo = Depends(get_user),
+    session: AsyncSession = Depends(get_session),
+):
+    q = select(Booking).where(Booking.user_id == user.id)
     bookings = (await session.exec(q)).all()
 
     return bookings
