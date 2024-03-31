@@ -1,6 +1,7 @@
 # Room Booking Microservice
-<img src="/home/prod/cursebow/misc/logo.jpg" alt="Alt text">
-<img src="https://drive.google.com/file/d/10yRYPY_DCPHr2N-VxN39zx9sbBFbwJoK/view?usp=sharing/view" alt="Alt text">
+<img style="width: 300, height: 300" src="../misc/logo.jpg" alt="logo">
+<img style="width: 300, height: 300" src="../misc/name.jpg" alt="name">
+
 ## Overview
 This microservice application is designed for booking rooms and managing related functionalities. It leverages various technologies and services to provide a seamless experience for users.
 
