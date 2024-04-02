@@ -14,7 +14,6 @@ from booking_service.database.Models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-context.opts['cascade_backrefs'] = True
 config = context.config
 
 # Interpret the config file for Python logging.
