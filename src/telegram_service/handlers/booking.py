@@ -8,6 +8,7 @@ from datetime import datetime,date,timedelta
 from time_module import get_date_list
 from texts import txt_booking
 from db.book import fetch_rooms, book, get_books
+from db.reg import info_user
 from utils.lst_work import to_times
 
 router = Router()
@@ -15,6 +16,13 @@ router = Router()
 
 @router.message(Command("booking"))
 async def room_sel(message: Message, state: FSMContext):
+    info = await info_user(str(message.from_user.id))
+    if info[1] == 401:
+        mess = await message.answer(
+            text="Необходима регистрация /register",
+        )
+        return None
+
     lst = await fetch_rooms(message.from_user.id)
     await state.clear()
     await state.set_data({})
@@ -52,13 +60,19 @@ async def int_sel(message: Message, state: FSMContext):
     mess = data.get("mess")
     day =datetime.strptime(message.data,"%A %d %b %Y").strftime("%Y-%m-%d")
     lst = await get_books(room,day,message.from_user.id)
-    lst = await to_times(lst)
-    mess = await mess.edit_text(
-        text=txt_booking.state.get(Booking.choosing_interval._state),
-        reply_markup = make_row_keyboard([i for i in lst],1)
-        )
-    await state.set_state(Booking.choosing_interval)
 
+    if lst[1] in (200,201,204):
+        lst = await to_times(lst[0])
+        mess = await mess.edit_text(
+            text=txt_booking.state.get(Booking.choosing_interval._state),
+            reply_markup = make_row_keyboard([i for i in lst],1)
+            )
+        await state.set_state(Booking.choosing_interval)
+    else:
+        mess = await mess.edit_text(
+            text=f"{lst[0]}",
+            reply_markup = make_row_keyboard([i for i in lst],1)
+            )
 
 @router.callback_query(Booking.choosing_interval)
 async def start_time(message: Message, state: FSMContext):
@@ -124,7 +138,12 @@ async def start_time(message: Message, state: FSMContext):
     start,finish = interval.split("-")
     start = f"{day_} {start}"
     finish = f"{day_} {finish}"
-    await book(start,finish,room,message.from_user.id)
+    res = await book(start,finish,room,message.from_user.id)
+    if res[1] not in (200,201):
+        await mess.edit_text(
+            text=f"{res[0]}",
+        )
+        return
     await mess.edit_text(
         text=f"{txt_booking.finish}\n{name}\n{urlka}",
     )

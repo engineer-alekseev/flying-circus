@@ -16,15 +16,15 @@ async def init_db():
 
     async with async_session() as session:
         users = [
-            User(
-                email="pintoved@student.21-school.ru",
-                telegram_id="123456789",
-                role=Role.ADMIN,
-            ),
-            User(
-                email="pintoved_2@student.21-school.ru",
-                telegram_id="123456782",
-            ),
+            # User(
+            #     email="pintoved@student.21-school.ru",
+            #     telegram_id="123456789",
+            #     role=Role.ADMIN,
+            # ),
+            # User(
+            #     email="pintoved_2@student.21-school.ru",
+            #     telegram_id="123456782",
+            # ),
         ]
 
         for u in users:

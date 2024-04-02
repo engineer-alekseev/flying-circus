@@ -26,7 +26,8 @@ async def get_books(room,day,id):
     async with aiohttp.ClientSession() as session:
         async with session.get(url, params=params, headers=headers) as response:
             data = await response.json()
-    return data
+    return data,response.status
+
 async def fetch_rooms(id):
     async with aiohttp.ClientSession() as session:
         async with session.get(f'{BOOKING_SERVICE}/booking_service/rooms/', headers={'accept': 'application/json',  "X-Telegram-ID": str(id)}) as response:
@@ -43,6 +44,6 @@ async def book(start,end,room,id):
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=payload, headers=headers) as response:
             data = await response.json()
-    return data        
+    return data, response.status      
     
 

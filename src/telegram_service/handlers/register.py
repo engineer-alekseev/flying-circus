@@ -7,7 +7,7 @@ from keyboards.simple_row import make_yn_keyboard
 from texts import txt_register
 from utils.mail import send_mail
 from tokenlib import * 
-from db.reg import register_user
+from db.reg import register_user, info_user
 
 
 router = Router()
@@ -16,6 +16,12 @@ router = Router()
 async def cmd_reg(message: Message, state: FSMContext):
     await state.clear()
     await state.set_data({})
+    # info = await info_user(str(message.from_user.id))
+    # if info[1] == 200:
+    #     mess = await message.answer(
+    #         text="Вы уже зарегистрированы /register",
+    #     )
+    #     return None
     mess = await message.answer(
         text=txt_register.start,
         )

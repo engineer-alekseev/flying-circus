@@ -27,5 +27,5 @@ async def cmd_cancel(message: Message, state: FSMContext):
     await state.set_data({})
     await message.answer(
         text="Действие отменено",
-        reply_markup=ReplyKeyboardRemove()
+        
     )

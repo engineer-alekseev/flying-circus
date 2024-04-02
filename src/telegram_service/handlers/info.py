@@ -15,11 +15,14 @@ async def cmd_reg(message: Message, state: FSMContext):
         await message.answer(
             text = '\n'.join(f"{i}: {data[i]}" for i in data),
         )
+    else:
+        await message.answer(
+            text = "Необходима регистрация /register",
+        )
 
 
 @router.message(Command("id"))
 async def cmd_reg(message: Message, state: FSMContext):
-    data = await info_user(str(message.from_user.id))
     await message.answer(
         f'Ваш Телеграмм ID: {message.from_user.id}',
         )
