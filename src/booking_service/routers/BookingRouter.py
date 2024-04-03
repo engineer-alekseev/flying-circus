@@ -1,6 +1,5 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Depends
-# postgresql+asyncpg://postgres:postgres@postgres_service:5432/postgres
 
 from routers.schemas import (
     BookingCreate,

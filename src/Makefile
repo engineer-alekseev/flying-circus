@@ -1,5 +1,6 @@
 DB_DIR := postgres_service
 DB_CONTAINER_NAME := postgres_service
+DB_CONTAINER_IP := $(shell docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' postgres_service)
 
 all: up
 
@@ -42,3 +43,8 @@ prune:
 
 install:
 	cd auth; make install
+
+upgrade:
+	echo $(DB_CONTAINER_IP)
+	sed -i "s|postgresql+asyncpg://postgres:postgres@.*:5432/postgres|postgresql+asyncpg://postgres:postgres@$(DB_CONTAINER_IP):5432/postgres|g" ./updater/alembic.ini
+	
