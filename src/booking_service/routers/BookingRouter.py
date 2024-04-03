@@ -1,7 +1,6 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Depends
 
-
 from routers.schemas import (
     BookingCreate,
     BookingFullInfo,

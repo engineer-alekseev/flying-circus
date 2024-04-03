@@ -42,3 +42,7 @@ prune:
 
 install:
 	cd auth; make install
+
+upgrade:
+	python3 ./updater/updater.py
+	

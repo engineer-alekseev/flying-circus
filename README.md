@@ -35,6 +35,15 @@ Swagger:
 - [tg](https://tg.bytecode.su/docs)
 - [mail](https://mail.bytecode.su/docs)
 
+## Migrations
+
+If you have changes to your database, you can use Alembic for migration.
+- In ***updater/.env*** adjust your variables.
+- Run ***make upgrade*** while have launched container with database. This will change your ***alembic.ini*** file.
+- Go to ***updater*** folder again and do ***alembic revision --autogenerate -m "<your-rev-name>"***.
+- Then do ***alembic upgrade head***. If you get some DB errors, adjust your <your-rev-name>.py file. (For example, the order of tables deletion)
+- Done.
+
 ## Contributing
 If you would like to contribute to the project, please follow these guidelines:
 Feel free to customize this template to fit the specific details and structure of your microservice architecture, this project has no license.
